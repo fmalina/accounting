@@ -8,7 +8,7 @@ Accepts a CSV file name as an argument, defaulting to transactions.csv
 
 Expected CSV headers are as follows (if one starts with different bank's CSV format):
 
-    ['Number', 'Date', 'Account', 'Amount', 'Subcategory', 'Memo']
+    Number, Date, Account, Amount, Subcategory, Memo
 
 Usage
 =====
