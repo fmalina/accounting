@@ -1,7 +1,6 @@
 TODO
 ====
 
- - add tests
  - allow to add a transaction party to a category on the fly and save categorisation
  - allow to specify a unilexicon vocabulary to tag transaction parties against
  - SQLite storage of transaction data
