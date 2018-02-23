@@ -6,7 +6,7 @@ Analyse accounts
 
 from collections import OrderedDict
 import decimal
-import json
+import yaml
 import csv
 import sys
 
@@ -79,8 +79,8 @@ def render_breakdowns(fn, threshold=200):
     return lines # + ['Expense tags:', ', '.join(dict(expenses).keys())]
 
 
-def get_categories(fn='transaction-categories.js'):
-    cats = json.load(open(fn))
+def get_categories(fn='transaction-categories.yml'):
+    cats = yaml.load(open(fn))
     cats = {k:sorted(v) for k,v in cats.items()}
     # print(json.dumps(cats, indent=4, sort_keys=True))
 
