@@ -17,5 +17,7 @@ Expected CSV headers are as follows (if one starts with different bank's CSV for
 
 Categorisation of transactions
 ------------------------------
-Categorisation of transactions is based on a dictionary stored in `transaction-categories.js`
+Categorisation of transactions is based on a dictionary
+stored in `transaction-categories.yml`
+
 This can be edited manually adding parties to different categories.
