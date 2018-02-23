@@ -67,6 +67,8 @@ def render_breakdowns(fn, threshold=200):
         # get variable name
         heading = [k for k,v in locals().items() if v is category][0]
         cat_total = sum(dict(category).values())
+        if not cat_total:
+            continue
         lines += ['', heading.upper(), '=' * len(heading), '']
         for line in category:
             name, value = line
@@ -76,7 +78,7 @@ def render_breakdowns(fn, threshold=200):
         total_str = 'Total %s (£): %s' % (heading, cat_total)
         lines += ['', total_str, '']
 
-    return lines # + ['Expense tags:', ', '.join(dict(expenses).keys())]
+    return '\n'.join(lines) # + ['Expense tags:', ', '.join(dict(expenses).keys())]
 
 
 def get_categories(fn='transaction-categories.yml'):
@@ -105,14 +107,14 @@ def expense_categories(fn):
         party_category = lookup.get(party_name, 'Unknown')
         totals.setdefault(party_category, []).append(amount)
 
-    lines = []
+    lines = ['', 'Spending analysis', '=================']
     options = enumerate(categories.keys(), start=1)
     for index, category in options:
-        total = sum(totals[category])
+        total = sum(totals.get(category, [0]))
         s = '%s) %s: £%s' % (index, category, total)
         lines.append(s)
-
-    return lines
+    lines += ['']
+    return '\n'.join(lines)
 
 
 if __name__=='__main__':
@@ -121,11 +123,5 @@ if __name__=='__main__':
     except IndexError:
         fn = 'transactions.csv'
 
-    lines = render_breakdowns(fn)
-    print('\n'.join(lines))
-
-    print()
-    print('Spending analysis')
-    print('=================')
-    lines2 = expense_categories(fn)
-    print('\n'.join(lines2))
+    print(render_breakdowns(fn))
+    print(expense_categories(fn))
