@@ -6,7 +6,7 @@ test_breakdowns = """
 REVENUE
 =======
 
-              CLIENT, 999.00    
+              CLIENT, 999.00
 
 Total revenue (£): 999.00
 
@@ -14,17 +14,17 @@ Total revenue (£): 999.00
 EXPENSES
 ========
 
-       VIRGIN TRAINS, -270.00   
-              AIRBNB, -242.00   
-                 H3G, -93.20    
-         ASDA PETROL, -80.99    
-            WORLDPAY, -50.99    
-                ALDI, -24.12    
-        DON GIOVANNI, -17.98    
-           MCDONALDS, -13.18    
-                 KFC, -6.39     
-              SUBWAY, -4.50     
-       PRET A MANGER, -2.35     
+       VIRGIN TRAINS, -270.00
+              AIRBNB, -242.00
+                 H3G, -93.20
+         ASDA PETROL, -80.99
+            WORLDPAY, -50.99
+                ALDI, -24.12
+        DON GIOVANNI, -17.98
+           MCDONALDS, -13.18
+                 KFC, -6.39
+              SUBWAY, -4.50
+       PRET A MANGER, -2.35
 
 Total expenses (£): -805.70
 """

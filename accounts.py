@@ -12,13 +12,14 @@ import sys
 
 
 def headers_data(fn='transactions.csv'):
-    data = list(csv.reader(open(fn, 'r')))
+    f = open(fn, 'r')
+    data = list(csv.reader(f))
+    f.close()
     return data[0], data
 
 
 def get_total_income(fn):
-    """ Quick analysis returning total income for this CSV.
-    """
+    """Quick analysis returning total income for this CSV"""
     headers, data = headers_data(fn)
 
     total = 0
@@ -31,22 +32,28 @@ def get_total_income(fn):
 
 
 def breakdown_per_party(data, headers):
-    """ Get breakdowns per party from transaction memo.
-    """
+    """Get breakdowns per party from transaction memo"""
     od = OrderedDict()
     # group transactions by 1st part of memo which holds sender/recipient
     for row in data[1:]:
         d = dict(zip(headers, row))
         amount = d['Amount']
-        memo = d['Memo']
+        memo = d.get('Memo')
+        if not memo:
+            memo = d.get('Name')
+        if not memo:
+            memo = d.get('Description')
         memo_data = [x.strip() for x in memo.split('  ') if x]
         party = memo_data[0]
+        # party = ''.join([x for x in party if not x.isdigit()])
+        party = party.strip().upper()
+
         od.setdefault(party, []).append(decimal.Decimal(amount))
     # sum transactions
     results = OrderedDict()
     for party, transcs in od.items():
         results[party] = sum(transcs)
-    return sorted(results.items(), key=lambda x:x[1])
+    return sorted(results.items(), key=lambda x: x[1])
 
 
 def render_breakdowns(fn, threshold=200):
@@ -65,7 +72,7 @@ def render_breakdowns(fn, threshold=200):
     lines = []
     for category in revenue, expenses, refunds:
         # get variable name
-        heading = [k for k,v in locals().items() if v is category][0]
+        heading = [k for k, v in locals().items() if v is category][0]
         cat_total = sum(dict(category).values())
         if not cat_total:
             continue
@@ -74,29 +81,31 @@ def render_breakdowns(fn, threshold=200):
             name, value = line
             col_name = name[:20].rjust(20)
             col_value = str(value).ljust(10)
-            lines.append('%s, %s' % (col_name, col_value))
+            lines.append('%s, %s' % (col_name, col_value.rstrip()))
         total_str = 'Total %s (£): %s' % (heading, cat_total)
         lines += ['', total_str, '']
 
-    return '\n'.join(lines) # + ['Expense tags:', ', '.join(dict(expenses).keys())]
+    # tags = ', '.join(dict(expenses).keys())
+    return '\n'.join(lines)  # + f'Expense tags: {tags}'
 
 
 def get_categories(fn='transaction-categories.yml'):
-    cats = yaml.load(open(fn))
-    cats = {k:sorted(v) for k,v in cats.items()}
+    f = open(fn)
+    cats = yaml.safe_load(f)
+    f.close()
+    cats = {k: sorted(v) for k, v in cats.items()}
+    # import json
     # print(json.dumps(cats, indent=4, sort_keys=True))
 
     lookup = {}
     for cat_name, ls in cats.items():
-        for l in ls:
-            lookup[l] = cat_name
-
+        for x in ls:
+            lookup[x] = cat_name
     return cats, lookup
 
 
 def expense_categories(fn):
-    """ Allow user to categorise expenses
-    """
+    """Allow user to categorise expenses"""
     headers, data = headers_data(fn)
     breakdowns = breakdown_per_party(data, headers)
     categories, lookup = get_categories()
@@ -117,7 +126,7 @@ def expense_categories(fn):
     return '\n'.join(lines)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     try:
         fn = sys.argv[1]
     except IndexError:
