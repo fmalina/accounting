@@ -110,10 +110,13 @@ def expense_categories(fn):
     breakdowns = breakdown_per_party(data, headers)
     categories, lookup = get_categories()
 
+    misc = []
     totals = OrderedDict()
     for party in breakdowns:
         party_name, amount = party
         party_category = lookup.get(party_name, 'Unknown')
+        if party_category == 'Unknown':
+            misc.append(party_name)
         totals.setdefault(party_category, []).append(amount)
 
     lines = ['', 'Spending analysis', '=================']
@@ -123,7 +126,10 @@ def expense_categories(fn):
         s = '%s) %s: £%s' % (index, category, total)
         lines.append(s)
     lines += ['']
-    return '\n'.join(lines)
+    miscs = ''
+    if misc:
+        miscs = '\n\nUncategorised:\n'+ ' * '.join(sorted(misc))
+    return '\n'.join(lines) + miscs
 
 
 if __name__ == '__main__':

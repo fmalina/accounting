@@ -43,7 +43,6 @@ Spending analysis
 8) Phone: £-93.20
 9) Insurance/biz services: £-50.99
 10) Other: £0
-11) Uncategorised: £0
 """
 
 
