@@ -104,6 +104,29 @@ def get_categories(fn='transaction-categories.yml'):
     return cats, lookup
 
 
+def sort_misc(misc_parties):
+    """Use user input to place transaction party in chosen category"""
+    categories, lookup = get_categories()
+    categorised = OrderedDict()
+    for party in misc_parties:
+        print()
+        print(f'Choose which category does "{party}" belong to?')
+        cat_index = enumerate(list(categories.keys()), start=1)
+        cat_lookup = OrderedDict()
+        for i, x in cat_index:
+            cat_lookup[i] = x
+        for i, x in cat_lookup.items():
+            print(f'{i}) {x}')
+        cat_no = input('Enter number: ')
+        try:
+            cat_no = int(cat_no)
+        except ValueError:
+            print('Enter only numbers! Exiting.')
+            exit()
+        categorised.setdefault(cat_lookup[cat_no], []).append(party)
+        print(f'NEWLY CATEGORISED: {categorised}')
+
+
 def expense_categories(fn):
     """Allow user to categorise expenses"""
     headers, data = headers_data(fn)
@@ -128,8 +151,10 @@ def expense_categories(fn):
     lines += ['']
     miscs = ''
     if misc:
+        sort_misc(misc)
         miscs = '\n\nUncategorised:\n'+ ' * '.join(sorted(misc))
     return '\n'.join(lines) + miscs
+
 
 
 if __name__ == '__main__':
