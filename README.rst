@@ -13,7 +13,7 @@ Usage
 
 Expected CSV headers are as follows (if one starts with different bank's CSV format):
 
-    Number, Date, Account, Amount, Subcategory, Memo
+    ..., Amount, ..., Memo
 
 Categorisation of transactions
 ------------------------------
